@@ -13,10 +13,7 @@ async fn main() {
         // ===== Camera =====
         let camera = Camera2D {
             target: player, // follow player
-            zoom: vec2(
-                SCALE / screen_width(),
-                -SCALE / screen_height(),
-            ),
+            zoom: vec2(SCALE / screen_width(), -SCALE / screen_height()),
             ..Default::default()
         };
         set_camera(&camera);
@@ -61,36 +58,14 @@ async fn main() {
         draw_circle(mouse_world.x, mouse_world.y, 0.08, RED);
 
         // draw line from x axis to player
-        draw_line(
-            player.x,
-            0.0,
-            player.x,
-            player.y,
-            0.03,
-            ORANGE,
-        );
+        draw_line(player.x, 0.0, player.x, player.y, 0.03, ORANGE);
 
         // draw y axis to player
-        draw_line(
-            0.0,
-            player.y,
-            player.x,
-            player.y,
-            0.03,
-            ORANGE,
-        );
+        draw_line(0.0, player.y, player.x, player.y, 0.03, ORANGE);
 
         // draw line of player unit vector
         let player_unit_vec = calculate_unit_vector(player.x, player.y);
-        draw_line(
-            0.0,
-            0.0,
-            player_unit_vec.x,
-            player_unit_vec.y,
-            0.03,
-            PURPLE,
-        );
-
+        draw_line(0.0, 0.0, player_unit_vec.x, player_unit_vec.y, 0.03, PURPLE);
 
         // unit vector from player to mouse
         let to_mouse_unit_vec = calculate_unit_vector(dx, dy);
@@ -195,12 +170,10 @@ async fn main() {
 
         // Apply rotation matrix: [cos -sin] [x]   [x*cos - y*sin]
         //                        [sin  cos] [y] = [x*sin + y*cos]
-        let tri_rotated: Vec<Vec2> = tri_original.iter().map(|p| {
-            vec2(
-                p.x * cos_a - p.y * sin_a,
-                p.x * sin_a + p.y * cos_a,
-            )
-        }).collect();
+        let tri_rotated: Vec<Vec2> = tri_original
+            .iter()
+            .map(|p| vec2(p.x * cos_a - p.y * sin_a, p.x * sin_a + p.y * cos_a))
+            .collect();
 
         // Draw rotated triangle
         for i in 0..3 {
@@ -220,7 +193,14 @@ async fn main() {
         draw_arc(rot_center, 1.0, rot_angle, GOLD);
 
         // Draw reference axis (0 degrees)
-        draw_line(rot_center.x, rot_center.y, rot_center.x + 2.5, rot_center.y, 0.02, DARKGRAY);
+        draw_line(
+            rot_center.x,
+            rot_center.y,
+            rot_center.x + 2.5,
+            rot_center.y,
+            0.02,
+            DARKGRAY,
+        );
 
         // Draw current angle line
         draw_line(
@@ -229,7 +209,7 @@ async fn main() {
             rot_center.x + rot_angle.cos() * 2.5,
             rot_center.y + rot_angle.sin() * 2.5,
             0.03,
-            GOLD
+            GOLD,
         );
 
         // ===== DOT PRODUCT Demo Area =====
@@ -274,7 +254,12 @@ async fn main() {
             SKYBLUE,
         );
         // Arrowhead for B
-        draw_circle(dot_center.x + vec_b.x, dot_center.y + vec_b.y, 0.12, SKYBLUE);
+        draw_circle(
+            dot_center.x + vec_b.x,
+            dot_center.y + vec_b.y,
+            0.12,
+            SKYBLUE,
+        );
 
         // Draw arc showing angle between vectors
         let angle_a = vec_a.y.atan2(vec_a.x);
@@ -283,9 +268,9 @@ async fn main() {
 
         // Color indicator based on dot product sign
         let dot_color = if dot_product > 0.1 {
-            GREEN  // Same direction
+            GREEN // Same direction
         } else if dot_product < -0.1 {
-            RED    // Opposite direction
+            RED // Opposite direction
         } else {
             YELLOW // Perpendicular
         };
@@ -342,7 +327,13 @@ async fn main() {
         let offset_colors = [ORANGE, LIME, SKYBLUE];
 
         // Draw reference circle showing the distance
-        draw_circle_lines(offset_center.x, offset_center.y, offset_distance, 0.02, DARKGRAY);
+        draw_circle_lines(
+            offset_center.x,
+            offset_center.y,
+            offset_distance,
+            0.02,
+            DARKGRAY,
+        );
 
         // Draw center point
         draw_circle(offset_center.x, offset_center.y, 0.12, WHITE);
@@ -386,22 +377,28 @@ async fn main() {
 
             // Draw arc from base angle to this angle
             if deg != 0.0 {
-                draw_arc_between(offset_center, 1.0, base_angle, final_angle, offset_colors[i]);
+                draw_arc_between(
+                    offset_center,
+                    1.0,
+                    base_angle,
+                    final_angle,
+                    offset_colors[i],
+                );
             }
         }
 
         // ===== UI (screen space) =====
         set_default_camera();
-        draw_text("WASD to move, adjust angle with mouse", 20.0, 30.0, 30.0, WHITE);
-
+        draw_text(
+            "WASD to move, adjust angle with mouse",
+            20.0,
+            30.0,
+            30.0,
+            WHITE,
+        );
 
         // Origin label
-        draw_anchored_text(
-            &format!("Origin (0,0)"),
-            -2.0,
-            -2.0,
-            &camera,
-        );
+        draw_anchored_text(&format!("Origin (0,0)"), -2.0, -2.0, &camera);
 
         // ATAN2 Demo labels (anchored to the ground)
         draw_anchored_text(
@@ -440,12 +437,7 @@ async fn main() {
         );
 
         // 2D ROTATION Demo labels
-        draw_anchored_text(
-            "2D ROTATION",
-            rot_center.x,
-            rot_center.y + 3.3,
-            &camera,
-        );
+        draw_anchored_text("2D ROTATION", rot_center.x, rot_center.y + 3.3, &camera);
         draw_anchored_text(
             &format!("angle = {:.1} deg", rot_angle_deg),
             rot_center.x,
@@ -502,9 +494,7 @@ async fn main() {
             draw_anchored_text_color(
                 &format!(
                     "{}: ({:.1},{:.1})->({:.1},{:.1})",
-                    vertex_names[i],
-                    orig.x, orig.y,
-                    rotated.x, rotated.y
+                    vertex_names[i], orig.x, orig.y, rotated.x, rotated.y
                 ),
                 label_pos.x,
                 label_pos.y,
@@ -530,12 +520,7 @@ async fn main() {
         );
 
         // DOT PRODUCT Demo labels
-        draw_anchored_text(
-            "DOT PRODUCT",
-            dot_center.x,
-            dot_center.y + 2.8,
-            &camera,
-        );
+        draw_anchored_text("DOT PRODUCT", dot_center.x, dot_center.y + 2.8, &camera);
         draw_anchored_text_color(
             "A (fixed)",
             dot_center.x + vec_a.x + 0.3,
@@ -579,26 +564,9 @@ async fn main() {
         );
 
         // LERP Demo labels
-        draw_anchored_text(
-            "LERP",
-            lerp_center.x,
-            lerp_center.y + 2.5,
-            &camera,
-        );
-        draw_anchored_text_color(
-            "A",
-            lerp_a.x - 0.4,
-            lerp_a.y,
-            &camera,
-            RED,
-        );
-        draw_anchored_text_color(
-            "B",
-            lerp_b.x + 0.4,
-            lerp_b.y,
-            &camera,
-            GREEN,
-        );
+        draw_anchored_text("LERP", lerp_center.x, lerp_center.y + 2.5, &camera);
+        draw_anchored_text_color("A", lerp_a.x - 0.4, lerp_a.y, &camera, RED);
+        draw_anchored_text_color("B", lerp_b.x + 0.4, lerp_b.y, &camera, GREEN);
         draw_anchored_text(
             &format!("t = {:.2}", t),
             lerp_center.x,
@@ -606,7 +574,11 @@ async fn main() {
             &camera,
         );
         draw_anchored_text(
-            &format!("lerp(A,B,t) = ({:.1}, {:.1})", lerp_result.x - lerp_center.x, lerp_result.y - lerp_center.y),
+            &format!(
+                "lerp(A,B,t) = ({:.1}, {:.1})",
+                lerp_result.x - lerp_center.x,
+                lerp_result.y - lerp_center.y
+            ),
             lerp_center.x,
             lerp_center.y - 3.1,
             &camera,
@@ -682,8 +654,6 @@ async fn main() {
             &camera,
         );
 
-
-
         // Player look at mouse unit vector label
         draw_text(
             &format!(
@@ -714,7 +684,6 @@ async fn main() {
             0.03,
             PURPLE,
         );
-
 
         next_frame().await;
     }
@@ -749,12 +718,7 @@ fn calculate_unit_vector(x: f32, y: f32) -> Vec2 {
     }
 }
 
-fn draw_anchored_text(
-    text: &str,
-    world_x: f32,
-    world_y: f32,
-    camera: &Camera2D,
-) {
+fn draw_anchored_text(text: &str, world_x: f32, world_y: f32, camera: &Camera2D) {
     let screen_pos = camera.world_to_screen(vec2(world_x, world_y));
     draw_text(text, screen_pos.x, screen_pos.y, 20.0, WHITE);
 }
