@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/2d-math-cheat-sheet/',
+  base: '/2d_math_cheat_sheet/',
   publicDir: '../public',
   server: {
     port: 3000,
